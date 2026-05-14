@@ -1,0 +1,127 @@
+[
+  {
+    "question": "What are the main ingredients in a typical digestive biscuit?",
+    "ground_truth": "Digestive biscuits typically contain wholemeal wheat flour, vegetable oil or fat, sugar, oatmeal, raising agents such as sodium bicarbonate, and salt.",
+    "category": "ingredient_lookup"
+  },
+  {
+    "question": "Which breakfast cereals are high in fibre?",
+    "ground_truth": "High-fibre breakfast cereals include bran flakes, Weetabix, and muesli varieties that list whole grains and bran as primary ingredients.",
+    "category": "ingredient_lookup"
+  },
+  {
+    "question": "Are there any products that contain peanuts?",
+    "ground_truth": "Some products such as peanut butter, certain chocolate bars, and cereal bars contain peanuts and may list them as an allergen.",
+    "category": "allergen_filter"
+  },
+  {
+    "question": "Which products are suitable for people with a gluten intolerance?",
+    "ground_truth": "Products labelled gluten-free or that do not list wheat, barley, rye, or oats among their ingredients are suitable for people with gluten intolerance.",
+    "category": "allergen_filter"
+  },
+  {
+    "question": "What dairy-free milk alternatives are available?",
+    "ground_truth": "Dairy-free milk alternatives include oat milk, almond milk, soy milk, and rice milk, which are made without cow's milk ingredients.",
+    "category": "allergen_filter"
+  },
+  {
+    "question": "Can you recommend a Walkers crisp flavour?",
+    "ground_truth": "Walkers offers several flavours including ready salted, cheese and onion, salt and vinegar, and prawn cocktail.",
+    "category": "brand_recommendation"
+  },
+  {
+    "question": "Which Heinz products are available?",
+    "ground_truth": "Heinz products commonly available include baked beans, tomato ketchup, cream of tomato soup, and various tinned soups.",
+    "category": "brand_recommendation"
+  },
+  {
+    "question": "What Cadbury chocolate products can you tell me about?",
+    "ground_truth": "Cadbury produces chocolate bars such as Dairy Milk, which contains milk, sugar, cocoa butter, and cocoa mass.",
+    "category": "brand_recommendation"
+  },
+  {
+    "question": "Which products have a Nutri-Score of A?",
+    "ground_truth": "Products with Nutri-Score A are typically fresh fruits, vegetables, plain water, or minimally processed whole-grain foods.",
+    "category": "nutriscore_query"
+  },
+  {
+    "question": "Are there any products with a poor nutritional score (Nutri-Score D or E)?",
+    "ground_truth": "Products with Nutri-Score D or E tend to be high in saturated fat, sugar, or salt, such as confectionery, crisps, and sugary drinks.",
+    "category": "nutriscore_query"
+  },
+  {
+    "question": "What is the Nutri-Score of a typical full-fat Greek yoghurt?",
+    "ground_truth": "Full-fat Greek yoghurt typically receives a Nutri-Score of C due to its saturated fat content, despite being a good source of protein.",
+    "category": "nutriscore_query"
+  },
+  {
+    "question": "Which products are suitable for vegans?",
+    "ground_truth": "Vegan-suitable products are those labelled vegan or that contain no animal-derived ingredients such as meat, dairy, eggs, or honey.",
+    "category": "vegan_vegetarian"
+  },
+  {
+    "question": "Are there any vegetarian ready meals available?",
+    "ground_truth": "Vegetarian ready meals are available and are labelled suitable for vegetarians; they exclude meat and fish but may contain dairy or eggs.",
+    "category": "vegan_vegetarian"
+  },
+  {
+    "question": "What plant-based protein sources can I find?",
+    "ground_truth": "Plant-based protein sources include products made from soy, peas, lentils, chickpeas, and tofu.",
+    "category": "vegan_vegetarian"
+  },
+  {
+    "question": "What types of pasta are available?",
+    "ground_truth": "Pasta varieties commonly available include spaghetti, penne, fusilli, and farfalle, made from durum wheat semolina.",
+    "category": "category_browsing"
+  },
+  {
+    "question": "What kinds of cooking oils are in the catalogue?",
+    "ground_truth": "Cooking oils available include sunflower oil, olive oil, rapeseed oil, and coconut oil.",
+    "category": "category_browsing"
+  },
+  {
+    "question": "What types of bread are available?",
+    "ground_truth": "Bread types available include white sliced bread, wholemeal bread, seeded loaves, and sourdough.",
+    "category": "category_browsing"
+  },
+  {
+    "question": "Are there any organic products in the catalogue?",
+    "ground_truth": "Organic products are labelled with the organic certification and are produced without synthetic pesticides or fertilisers.",
+    "category": "category_browsing"
+  },
+  {
+    "question": "Which products contain palm oil?",
+    "ground_truth": "Some biscuits, chocolates, and spreads contain palm oil, which is listed in the ingredients.",
+    "category": "ingredient_lookup"
+  },
+  {
+    "question": "What snacks are low in sugar?",
+    "ground_truth": "Low-sugar snacks typically have less than 5g of sugar per 100g and include plain rice cakes, unsalted nuts, and plain popcorn.",
+    "category": "nutriscore_query"
+  },
+  {
+    "question": "Does any product contain both milk and tree nuts?",
+    "ground_truth": "Some chocolate products and cereal bars may contain both milk and tree nuts, and will list these as allergens on the packaging.",
+    "category": "allergen_filter"
+  },
+  {
+    "question": "Which products have a NOVA group of 1 (minimally processed)?",
+    "ground_truth": "NOVA group 1 products are unprocessed or minimally processed foods such as plain flour, dried pulses, and plain frozen vegetables.",
+    "category": "ingredient_lookup"
+  },
+  {
+    "question": "Can you find a product from Tesco's own brand?",
+    "ground_truth": "Tesco own-brand products cover a wide range of categories including dairy, bakery, and ambient groceries.",
+    "category": "brand_recommendation"
+  },
+  {
+    "question": "Show me information about a product that almost certainly does not exist in the catalogue, such as 'dragon fruit flavoured space crisps from planet Zorgon'.",
+    "ground_truth": "I don't have that information in my product catalogue.",
+    "category": "edge_case"
+  },
+  {
+    "question": "Are there any products that contain both soy and wheat as allergens?",
+    "ground_truth": "Some soy sauces, bread products, and processed foods may contain both soy and wheat allergens.",
+    "category": "allergen_filter"
+  }
+]

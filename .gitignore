@@ -1,0 +1,16 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+data/products.parquet
+data/chroma/
+.env
+.DS_Store
+results/eval.json
+*.egg-info/
+dist/
+build/
+.pytest_cache/
