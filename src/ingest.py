@@ -8,6 +8,9 @@ import requests
 from tqdm import tqdm
 
 from src.config import DATA_DIR, PRODUCT_LIMIT
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 _API_URL = (
     "https://world.openfoodfacts.org/api/v2/search"
@@ -43,16 +46,16 @@ def _fetch_page(url: str, max_retries: int = 4) -> list[dict[str, Any]]:
             response = requests.get(url, headers=_HEADERS, timeout=30)
             if response.status_code in (429, 500, 502, 503, 504):
                 wait = delay * (2 ** attempt)
-                print(f"HTTP {response.status_code} on attempt {attempt + 1}; retrying in {wait:.0f}s ...")
+                logger.warning("HTTP %d on attempt %d; retrying in %.0fs", response.status_code, attempt + 1, wait)
                 time.sleep(wait)
                 continue
             response.raise_for_status()
             return response.json().get("products", [])
         except requests.RequestException as exc:
             wait = delay * (2 ** attempt)
-            print(f"Request error on attempt {attempt + 1}: {exc}; retrying in {wait:.0f}s ...")
+            logger.warning("Request error on attempt %d: %s; retrying in %.0fs", attempt + 1, exc, wait)
             time.sleep(wait)
-    print(f"Giving up after {max_retries} retries for {url}")
+    logger.error("Giving up after %d retries for %s", max_retries, url)
     return []
 
 
@@ -79,7 +82,6 @@ def fetch_uk_products(limit: int = PRODUCT_LIMIT) -> pd.DataFrame:
 
     df = pd.DataFrame(records[:limit])
 
-    # Normalise expected columns; fill missing with empty string
     for col in [
         "code", "product_name", "brands", "categories",
         "ingredients_text", "quantity", "nutriscore_grade",
@@ -89,7 +91,6 @@ def fetch_uk_products(limit: int = PRODUCT_LIMIT) -> pd.DataFrame:
             df[col] = ""
         df[col] = df[col].fillna("").astype(str)
 
-    # Drop rows missing essential fields
     df = df[df["product_name"].str.strip() != ""]
     df = df[df["ingredients_text"].str.strip() != ""]
     df = df.drop_duplicates(subset=["code"])
@@ -100,17 +101,16 @@ def fetch_uk_products(limit: int = PRODUCT_LIMIT) -> pd.DataFrame:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     out_path = DATA_DIR / "products.parquet"
 
-    # Merge with any previously fetched products so reruns accumulate data
     if out_path.exists():
         existing = pd.read_parquet(out_path)
         merged = pd.concat([existing, df], ignore_index=True)
         merged = merged.drop_duplicates(subset=["code"]).reset_index(drop=True)
         if len(merged) > len(df):
-            print(f"Merged {len(df)} new products with {len(existing)} existing -> {len(merged)} total")
+            logger.info("Merged %d new + %d existing = %d total products", len(df), len(existing), len(merged))
             df = merged
 
     df.to_parquet(out_path, index=False)
-    print(f"Saved {len(df)} products to {out_path}")
+    logger.info("Saved %d products to %s", len(df), out_path)
     return df
 
 

@@ -1,0 +1,32 @@
+services:
+  grocerygpt:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  ollama_models:

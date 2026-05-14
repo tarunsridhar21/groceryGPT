@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GroceryGPT — Architecture & Evaluation</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #0e1117;
+      color: #e0e0e0;
+      padding: 48px 64px;
+      max-width: 960px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .badge-row {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .badge {
+      background: #1e2530; border-radius: 4px; padding: 4px 10px;
+      font-size: 12px; font-family: monospace; color: #8ab4f8;
+      border: 1px solid #2a3240;
+    }
+    h1 {
+      font-size: 2rem; font-weight: 700; color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #ff4b4b; font-size: 1rem; margin-bottom: 32px; font-weight: 500;
+    }
+    h2 {
+      font-size: 1.25rem; font-weight: 600; color: #ffffff;
+      margin: 40px 0 16px;
+      border-bottom: 1px solid #2a3240;
+      padding-bottom: 8px;
+    }
+    /* Mermaid container */
+    .mermaid {
+      background: #161b22;
+      border-radius: 8px;
+      padding: 32px;
+      margin: 16px 0 32px;
+      border: 1px solid #2a3240;
+      overflow-x: auto;
+    }
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse; font-size: 0.875rem;
+      margin-bottom: 24px;
+    }
+    th {
+      background: #161b22; color: #8ab4f8;
+      padding: 10px 16px; text-align: left;
+      border-bottom: 2px solid #2a3240; font-weight: 600;
+    }
+    td {
+      padding: 10px 16px; border-bottom: 1px solid #1e2530;
+      color: #c9d1d9;
+    }
+    tr:hover td { background: #161b22; }
+    .score-high { color: #56d364; font-weight: 600; }
+    .score-mid  { color: #e3b341; font-weight: 600; }
+    .score-low  { color: #ff7b72; font-weight: 600; }
+    .score-na   { color: #6e7681; }
+    .metric-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-family: monospace; font-size: 0.8rem; font-weight: 700;
+    }
+    .caption {
+      color: #8b949e; font-size: 0.8rem; margin-top: -20px; margin-bottom: 28px;
+      font-style: italic;
+    }
+    .footer {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid #2a3240;
+      color: #8b949e; font-size: 0.8rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer span { font-family: monospace; }
+    .cmd {
+      background: #161b22; border: 1px solid #2a3240; border-radius: 4px;
+      padding: 12px 16px; font-family: monospace; font-size: 0.85rem;
+      color: #56d364; margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="badge-row">
+    <span class="badge">LangChain</span>
+    <span class="badge">ChromaDB</span>
+    <span class="badge">llama3.2:3b</span>
+    <span class="badge">BAAI/bge-small-en-v1.5</span>
+    <span class="badge">RAGAS</span>
+    <span class="badge">Streamlit</span>
+  </div>
+
+  <h1>GroceryGPT</h1>
+  <div class="subtitle">Local RAG over 1,891 UK grocery products · Zero API keys · Zero cloud</div>
+
+  <h2>System Architecture</h2>
+  <div class="mermaid">
+flowchart LR
+    A["👤 User"] --> B["🖥️ Streamlit UI"]
+    B --> C["📐 Sentence-Transformers\nEmbedder\nBAAI/bge-small-en-v1.5"]
+    C --> D["🔍 ChromaDB\nVector Store\ncosine distance"]
+    D --> E["📦 Top-K Retrieved\nProducts"]
+    E --> F["⛓️ LangChain\nRAG Chain"]
+    F --> G["🦙 Ollama\nllama3.2:3b"]
+    G --> H["✅ Answer + Sources"]
+    H --> B
+
+    style A fill:#1f2937,color:#e5e7eb,stroke:#374151
+    style B fill:#ff4b4b,color:#fff,stroke:#cc3c3c
+    style C fill:#1e3a5f,color:#93c5fd,stroke:#2563eb
+    style D fill:#1e3a5f,color:#93c5fd,stroke:#2563eb
+    style E fill:#1e3a5f,color:#93c5fd,stroke:#2563eb
+    style F fill:#14532d,color:#86efac,stroke:#16a34a
+    style G fill:#14532d,color:#86efac,stroke:#16a34a
+    style H fill:#1f2937,color:#e5e7eb,stroke:#374151
+  </div>
+
+  <h2>RAGAS Evaluation Results</h2>
+  <p class="caption">25 hand-crafted Q&amp;A pairs · 7 categories · llama3.2:3b judge · BAAI/bge-small-en-v1.5</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Score</th>
+        <th>Coverage</th>
+        <th>Mechanism</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>context_recall</strong></td>
+        <td><span class="metric-badge score-mid" style="background:#2d2a0a">0.4500</span></td>
+        <td>25/25 ✅</td>
+        <td>Sentence-level NLI entailment</td>
+      </tr>
+      <tr>
+        <td>faithfulness</td>
+        <td><span class="metric-badge score-mid" style="background:#2d2a0a">0.5000</span></td>
+        <td>5/25</td>
+        <td>LLM-as-judge (JSON output)</td>
+      </tr>
+      <tr>
+        <td>answer_relevancy</td>
+        <td><span class="metric-badge score-high" style="background:#0d2a1a">0.7486</span></td>
+        <td>4/25</td>
+        <td>LLM-as-judge (JSON output)</td>
+      </tr>
+      <tr>
+        <td>context_precision</td>
+        <td><span class="score-na">N/A</span></td>
+        <td>0/25</td>
+        <td>LLM-as-judge (JSON output)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Per-Category context_recall</h2>
+  <table>
+    <thead>
+      <tr><th>Category</th><th>Score</th><th>n</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>edge_case</td>         <td><span class="score-high">1.0000</span></td><td>1</td></tr>
+      <tr><td>allergen_filter</td>   <td><span class="score-high">0.7000</span></td><td>5</td></tr>
+      <tr><td>vegan_vegetarian</td>  <td><span class="score-mid">0.5000</span></td> <td>3</td></tr>
+      <tr><td>category_browsing</td> <td><span class="score-mid">0.3750</span></td> <td>4</td></tr>
+      <tr><td>brand_recommendation</td><td><span class="score-mid">0.3750</span></td><td>4</td></tr>
+      <tr><td>ingredient_lookup</td> <td><span class="score-low">0.3125</span></td> <td>5</td></tr>
+      <tr><td>nutriscore_query</td>  <td><span class="score-low">0.2500</span></td> <td>4</td></tr>
+      <tr>
+        <td><strong>Overall</strong></td>
+        <td><strong><span class="score-mid">0.4500</span></strong></td>
+        <td><strong>25</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Fully Reproducible</h2>
+  <div class="cmd">make ingest &nbsp;&nbsp;# fetch ~1,900 UK products from Open Food Facts (~5 min)</div>
+  <div class="cmd">make index &nbsp;&nbsp;&nbsp;# embed into ChromaDB with BAAI/bge-small-en-v1.5 (~30s on Apple MPS)</div>
+  <div class="cmd">make eval &nbsp;&nbsp;&nbsp;&nbsp;# run RAGAS evaluation (~16 min, 25 Q&amp;A pairs)</div>
+  <div class="cmd">make app &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# launch Streamlit at localhost:8501</div>
+
+  <div class="footer">
+    <span>RAGAS-evaluated · context_recall 0.45 · 25/25 coverage</span>
+    <span>MIT License · github.com/tarunsridharan/grocerygpt</span>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      flowchart: { curve: 'basis', nodeSpacing: 50, rankSpacing: 60 }
+    });
+  </script>
+</body>
+</html>

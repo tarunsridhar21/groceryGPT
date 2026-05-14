@@ -15,6 +15,9 @@ from src.config import (
     EMBED_BATCH_SIZE,
     EMBEDDING_MODEL,
 )
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def _get_device() -> str:
@@ -29,14 +32,14 @@ def build_index() -> None:
     """Embed products and persist to ChromaDB."""
     parquet_path = DATA_DIR / "products.parquet"
     if not parquet_path.exists():
-        print(f"products.parquet not found at {parquet_path}. Run `make ingest` first.")
+        logger.error("products.parquet not found at %s. Run `make ingest` first.", parquet_path)
         sys.exit(1)
 
     df = pd.read_parquet(parquet_path)
-    print(f"Loaded {len(df)} products from {parquet_path}")
+    logger.info("Loaded %d products from %s", len(df), parquet_path)
 
     device = _get_device()
-    print(f"Loading embedding model '{EMBEDDING_MODEL}' on device '{device}' ...")
+    logger.info("Loading embedding model '%s' on device '%s'", EMBEDDING_MODEL, device)
     model = SentenceTransformer(EMBEDDING_MODEL, device=device)
 
     CHROMA_DIR.mkdir(parents=True, exist_ok=True)
@@ -45,10 +48,9 @@ def build_index() -> None:
         settings=Settings(anonymized_telemetry=False),
     )
 
-    # Idempotent: drop and recreate
     if CHROMA_COLLECTION in [c.name for c in client.list_collections()]:
         client.delete_collection(CHROMA_COLLECTION)
-        print(f"Dropped existing collection '{CHROMA_COLLECTION}'")
+        logger.info("Dropped existing collection '%s'", CHROMA_COLLECTION)
 
     collection = client.create_collection(
         name=CHROMA_COLLECTION,
@@ -60,7 +62,7 @@ def build_index() -> None:
     metadatas = df[["product_name", "brands", "categories", "nutriscore_grade"]].to_dict(orient="records")
 
     total = len(texts)
-    print(f"Embedding {total} products in batches of {EMBED_BATCH_SIZE} ...")
+    logger.info("Embedding %d products in batches of %d", total, EMBED_BATCH_SIZE)
 
     for start in tqdm(range(0, total, EMBED_BATCH_SIZE), desc="Indexing"):
         end = min(start + EMBED_BATCH_SIZE, total)
@@ -82,7 +84,7 @@ def build_index() -> None:
             metadatas=batch_meta,
         )
 
-    print(f"Index built. Collection '{CHROMA_COLLECTION}' contains {collection.count()} items.")
+    logger.info("Index built. Collection '%s' contains %d items.", CHROMA_COLLECTION, collection.count())
 
 
 if __name__ == "__main__":

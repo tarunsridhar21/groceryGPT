@@ -1,0 +1,35 @@
+[project]
+name = "grocerygpt"
+version = "1.0.0"
+description = "RAG-based UK grocery intelligence assistant"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]
+ignore = [
+    "E501",  # line-length enforced by formatter, not checker
+    "B008",  # function call in default argument
+    "N806",  # pandas df variable conventions
+    "SIM108", # ternary vs if-else — readability preference
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_configs = true
+no_strict_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "integration: tests that require external services (Ollama, ChromaDB) — skip in CI with -m 'not integration'",
+]

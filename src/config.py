@@ -19,3 +19,8 @@ TOP_K: int = 5
 PRODUCT_LIMIT: int = 2000
 EMBED_BATCH_SIZE: int = 64
 CHROMA_COLLECTION: str = "products"
+
+# Swap to "llama3.1:8b" for full RAGAS coverage on structured-output metrics
+JUDGE_MODEL: str = "llama3.2:3b"
+
+LOGS_DIR = PROJECT_ROOT / "logs"

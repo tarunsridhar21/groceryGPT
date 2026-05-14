@@ -14,3 +14,9 @@ results/eval.json
 dist/
 build/
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+logs/*.jsonl
+docs/scenes/
+docs/demo_full.gif
+docs/demo_full.mp4
