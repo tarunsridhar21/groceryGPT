@@ -4,13 +4,13 @@ RAG over ~1,900 UK grocery products from Open Food Facts. Local LLM, embedded ve
 
 ## Demo
 
-https://github.com/user-attachments/assets/demo_full.mp4
+![GroceryGPT demo](docs/demo.png)
 
-> **2m 20s walkthrough** — 10 scenes: system health, allergen filtering, Nutri-Score constraints,
-> vegan inference, brand deep-dive, cross-category ingredient lookup, edge-case handling,
-> latency logging, and the RAGAS evaluation architecture.
+> Screenshot showing the Nutri-Score filter, colour-coded source badges, latency caption,
+> and thumbs-up/down feedback widget.
 >
-> *Can't see the video above? [Download MP4 (3.8 MB)](docs/demo_full.mp4) or [download GIF (19 MB)](docs/demo_full.gif).*
+> **To embed a video:** drag your MP4 into any GitHub issue comment box — GitHub generates
+> a CDN URL you can paste here in place of the screenshot.
 
 ## Architecture
 
